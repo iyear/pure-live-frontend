@@ -1,29 +1,3 @@
-# web
+# Pure-Live-Frontend
 
-## Project setup
-
-```
-yarn install
-```
-
-### Compiles and hot-reloads for development
-
-```
-yarn serve
-```
-
-### Compiles and minifies for production
-
-```
-yarn build
-```
-
-### Lints and fixes files
-
-```
-yarn lint
-```
-
-### Customize configuration
-
-See [Configuration Reference](https://cli.vuejs.org/config/).
+前端临时学着写的，很杂乱，只以实现展示功能为主。期待第三方前端页面出现
