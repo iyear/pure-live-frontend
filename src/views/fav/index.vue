@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-tabs tab-position="left" @tab-click="change">
+    <el-tabs tab-position="left" @tab-click="favSelectedChange">
       <el-tab-pane v-for="item in favLists" :key="item.id" :label="item.title">
         <el-table :data="favs" style="width: 100%" max-height="500">
           <el-table-column label="播放" width="70">
@@ -36,35 +36,34 @@
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
-              <el-button size="mini" @click="startEdit(scope.row)" style="margin-right: 10px">编辑</el-button>
+              <el-button size="mini" @click="startEditFav(scope.row)" style="margin-right: 10px">编辑</el-button>
               <el-popconfirm icon="el-icon-info" icon-color="red" :title="'确定要删除'+scope.row.upper+'的直播间吗?'"
-                             @confirm="del(scope.row)">
+                             @confirm="favDel(scope.row)">
                 <el-button size="mini" type="danger" slot="reference">删除</el-button>
               </el-popconfirm>
             </template>
           </el-table-column>
         </el-table>
-        <!--        <div style="text-align:center;margin-top:10px">-->
-        <!--          <el-pagination-->
-        <!--              background-->
-        <!--              @size-change="handleSizeChange"-->
-        <!--              @current-change="handleCurrentChange"-->
-        <!--              :current-page="currentPage4"-->
-        <!--              :page-sizes="[5, 10, 20, 50]"-->
-        <!--              :page-size="100"-->
-        <!--              layout="total, sizes, prev, pager, next, jumper"-->
-        <!--              :total="400">-->
-        <!--          </el-pagination>-->
-        <!--        </div>-->
       </el-tab-pane>
     </el-tabs>
-    <el-dialog title="编辑收藏项" :visible.sync="editFavDisplay" width="30%" @close="loadList(favSelected.fid)">
+    <el-button type="primary" size="small" round style="margin-top: 10px" @click="addFavListDisPlay=true">
+      新增
+    </el-button>
+    <el-button type="primary" size="small" round style="margin-top: 10px" @click="editFavListDisPlay=true">
+      编辑
+    </el-button>
+    <el-popconfirm icon="el-icon-info" icon-color="red" :title="'确定要删除['+favListSelected.title+']收藏夹吗?'"
+                   @confirm="favListDel(favListSelected)">
+      <el-button size="small" type="danger" round slot="reference" style="margin-left: 7px">删除</el-button>
+    </el-popconfirm>
+    <el-dialog title="编辑收藏项" :visible.sync="editFavDisplay" :close-on-click-modal="false" width="30%"
+               @close="loadFavList(favSelected.fid)">
       <el-form label-position="right" size="small" :inline="true">
         <el-form-item label="ID :">
           <el-tag size="small">{{ favSelected.id }}</el-tag>
         </el-form-item>
         <el-form-item label="排序 :">
-          <el-input-number size="small" v-model="favSelected.order"></el-input-number>
+          <el-input-number :min="0" :max="100" size="small" v-model="favSelected.order"></el-input-number>
         </el-form-item>
         <el-form-item label="平台 :">
           <el-select v-model="favSelected.plat" placeholder="请选择平台">
@@ -87,6 +86,43 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click="editFavDisplay = false">取 消</el-button>
         <el-button type="primary" @click="confirmEdit">确 定</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog title="新增收藏夹" :visible.sync="addFavListDisPlay" :close-on-click-modal="false" width="30%">
+      <el-form label-position="right" size="small" :inline="true">
+        <el-form-item label="标题 :" prop="title">
+          <el-input :minlength="2" :maxlength="60" v-model="favListAddForm.title"></el-input>
+        </el-form-item>
+        <el-form-item label="排序 :" prop="order">
+          <el-input-number :min="0" :max="100" size="small" v-model="favListAddForm.order"></el-input-number>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="addFavDisplay = false">取 消</el-button>
+        <el-button type="primary" @click="confirmAddList">确 定</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog title="编辑收藏夹" :visible.sync="editFavListDisPlay" :close-on-click-modal="false" width="20%">
+      <el-form label-position="right" size="small" :inline="true">
+        <el-form-item label="ID :">
+          <el-tag size="small">{{ favListSelected.id }}</el-tag>
+        </el-form-item>
+        <el-form-item label="标题 :" prop="title">
+          <el-input :minlength="2" :maxlength="60" v-model="favListSelected.title"></el-input>
+        </el-form-item>
+        <el-form-item label="排序 :" prop="order">
+          <el-input-number :min="0" :max="100" size="small" v-model="favListSelected.order"></el-input-number>
+        </el-form-item>
+        <el-form-item label="创建时间 :">
+          <el-tag size="small">{{ transformTime(favListSelected['created_at']) }}</el-tag>
+        </el-form-item>
+        <el-form-item label="上次修改 :">
+          <el-tag size="small">{{ transformTime(favListSelected['updated_at']) }}</el-tag>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="editFavListDisPlay=false">取 消</el-button>
+        <el-button type="primary" @click="confirmEditList">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -113,13 +149,35 @@ export default {
             this.editFavDisplay = false
           })
     },
-    startEdit(data) {
+    confirmAddList() {
+      this.$axios.post(`${this.$store.getters["player/getHTTP"]}/fav/list/add`, this.favListAddForm)
+          .then(resp => {
+            const d = resp.data
+            if (d.code !== 0) {
+              this.$message.error(`新增收藏夹失败: ${d.msg}`)
+              return
+            }
+            location.reload()
+          })
+    },
+    confirmEditList() {
+      this.$axios.post(`${this.$store.getters["player/getHTTP"]}/fav/list/edit`, this.favListSelected)
+          .then(resp => {
+            const d = resp.data
+            if (d.code !== 0) {
+              this.$message.error(`新增收藏夹失败: ${d.msg}`)
+              return
+            }
+            location.reload()
+          })
+    },
+    startEditFav(data) {
       console.log(data);
       this.editFavDisplay = true
       this.favSelected = data
       console.log(this.favSelected);
     },
-    del(data) {
+    favDel(data) {
       this.$axios.post(`${this.$store.getters["player/getHTTP"]}/fav/del`, {
         id: data.id
       }).then(resp => {
@@ -129,18 +187,33 @@ export default {
           return
         }
         this.$message.success(`删除[${data.upper}]的直播间成功!`)
-        this.loadList(data.fid)
+        this.loadFavList(data.fid)
+      })
+      console.log(data);
+    },
+    favListDel(data) {
+      this.$axios.post(`${this.$store.getters["player/getHTTP"]}/fav/list/del`, {
+        id: data.id
+      }).then(resp => {
+        const d = resp.data
+        if (d.code !== 0) {
+          this.$message.error(`删除[${data.title}]收藏夹失败: ${d.msg}`)
+          return
+        }
+        this.$message.success(`删除[${data.title}]收藏夹成功!`)
+        location.reload()
       })
       console.log(data);
     },
     play(data) {
       console.log(data);
     },
-    change(data) {
+    favSelectedChange(data) {
       const list = this.favLists[data.index]
-      this.loadList(list.id)
+      this.favListSelected = list
+      this.loadFavList(list.id)
     },
-    loadList(id) {
+    loadFavList(id) {
       this.$axios.get(`${this.$store.getters["player/getHTTP"]}/fav/list/get`, {
         params: {
           id: id
@@ -170,8 +243,10 @@ export default {
               return b.order - a.order
             })
             console.log(this.favLists);
+            this.loadFavList(this.favLists[0].id)
+            this.favSelectedChange({index: 0})
           })
-    }
+    },
   },
   mounted() {
     this.getFavLists()
@@ -181,7 +256,14 @@ export default {
       favLists: [],
       favs: [],
       favSelected: {},
+      favListSelected: 0,
+      favListAddForm: {
+        title: "新增收藏夹",
+        order: 1
+      },
       editFavDisplay: false,
+      addFavListDisPlay: false,
+      editFavListDisPlay: false,
       favForm: {}
     }
   }

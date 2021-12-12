@@ -263,7 +263,8 @@ export default {
     window.flvjs = flvJS
     window.hlsjs = hlsJS
     this.init();
-
+    console.log(this.$route);
+    console.log(window.location);
   },
   data() {
     return {
@@ -271,7 +272,7 @@ export default {
       player: null,
       plat: "bilibili",
       hot: 0,
-      room: "462",
+      room: "",
       origin: "",
       roomLink: "",
       displayOrigin: false,

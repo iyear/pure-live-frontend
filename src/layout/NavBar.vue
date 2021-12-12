@@ -3,6 +3,10 @@
     <div class="el-page-header__content title">
       Pure-Live
     </div>
+    <el-button round type="primary" icon="el-icon-warning-outline" style="margin-top: -5px;margin-left: 5px"
+               @click="githubOpen">
+      Github
+    </el-button>
     <div class="el-page-header__content title">
       {{ this.$store.state.player.title }}
     </div>
@@ -15,6 +19,12 @@
 <script>
 export default {
   name: "NavBar",
+  methods: {
+    githubOpen() {
+      window.open('https://github.com/iyear/pure-live-core', '_blank')
+    }
+
+  }
 }
 </script>
 
