@@ -16,8 +16,12 @@ const Player = {
     state: () => ({
         baseApi: "localhost:8081/api/v1",
         uuid: '',
+        plat: '',
+        room: '',
         title: '',
         upper: '',
+        // 用于收藏夹跳转和普通切换路由的判定
+        playStatus: 0
     }),
     mutations: {
         setTitle(state, data) {
@@ -28,6 +32,15 @@ const Player = {
         },
         setUUID(state, data) {
             state.uuid = data.uuid
+        },
+        setRoom(state, data) {
+            state.room = data.room
+        },
+        setPlat(state, data) {
+            state.plat = data.plat
+        },
+        setStatus(state, data) {
+            state.playStatus = data.playStatus
         }
     },
     actions: {},

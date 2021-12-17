@@ -206,7 +206,10 @@ export default {
       console.log(data);
     },
     play(data) {
-      console.log(data);
+      this.$store.commit("player/setRoom", {room: data.room})
+      this.$store.commit("player/setPlat", {plat: data.plat})
+      this.$store.commit("player/setStatus", {playStatus: 1})
+      this.$router.replace("/live")
     },
     favSelectedChange(data) {
       const list = this.favLists[data.index]
