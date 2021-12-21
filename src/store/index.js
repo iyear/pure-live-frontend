@@ -14,7 +14,7 @@ const Fav = {
 const Player = {
     namespaced: true,
     state: () => ({
-        baseApi: "localhost:8081/api/v1",
+        baseApi: `${window.location.host}/api/v1`,
         uuid: '',
         plat: '',
         room: '',
