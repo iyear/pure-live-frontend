@@ -257,7 +257,7 @@ export default {
         content: data.text,
         type: data.type,// 1:顶部 0:滚动 2:底部
         color: data.color,
-      }).then(function (resp) {
+      }).then(resp => {
         console.log(resp);
         const d = resp.data;
         if (d.code !== 0) {
