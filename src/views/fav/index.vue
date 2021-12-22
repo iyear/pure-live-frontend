@@ -98,7 +98,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="addFavDisplay = false">取 消</el-button>
+        <el-button @click="getFavLists();addFavListDisplay = false">取 消</el-button>
         <el-button type="primary" @click="confirmAddList">确 定</el-button>
       </div>
     </el-dialog>
@@ -121,7 +121,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="editFavListDisPlay=false">取 消</el-button>
+        <el-button @click="getFavLists();editFavListDisPlay=false">取 消</el-button>
         <el-button type="primary" @click="confirmEditList">确 定</el-button>
       </div>
     </el-dialog>
@@ -157,7 +157,9 @@ export default {
               this.$message.error(`新增收藏夹失败: ${d.msg}`)
               return
             }
-            location.reload()
+            this.$message.success(`添加成功!ID: ${d.data.id}`)
+            this.addFavListDisPlay = false
+            this.getFavLists()
           })
     },
     confirmEditList() {
@@ -168,7 +170,9 @@ export default {
               this.$message.error(`新增收藏夹失败: ${d.msg}`)
               return
             }
-            location.reload()
+            this.$message.success(`编辑成功!`)
+            this.editFavListDisPlay = false
+            this.getFavLists()
           })
     },
     startEditFav(data) {
@@ -201,7 +205,7 @@ export default {
           return
         }
         this.$message.success(`删除[${data.title}]收藏夹成功!`)
-        location.reload()
+        this.getFavLists()
       })
       console.log(data);
     },
