@@ -176,6 +176,7 @@ export default {
 
       this.$store.commit('player/setTitle', {title: d.data.title});
       this.$store.commit('player/setUpper', {upper: d.data.upper});
+      document.title = `pure-live - ${d.data.title}`
 
       this.room = d.data.room
       this.roomLink = d.data.link
