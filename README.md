@@ -1,29 +1,9 @@
-# web
+# Pure-Live-Frontend
 
-## Project setup
+`Vue` + `Vuex` + `Vue Router` + `ElementUI`
 
-```
-yarn install
-```
+前端临时学着写的，很杂乱，只以实现展示功能为主。期待优秀的第三方前端页面出现
 
-### Compiles and hot-reloads for development
+还未适配移动端，真的要写吐了
 
-```
-yarn serve
-```
-
-### Compiles and minifies for production
-
-```
-yarn build
-```
-
-### Lints and fixes files
-
-```
-yarn lint
-```
-
-### Customize configuration
-
-See [Configuration Reference](https://cli.vuejs.org/config/).
+主仓库: https://github.com/iyear/pure-live-core

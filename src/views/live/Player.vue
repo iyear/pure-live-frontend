@@ -29,7 +29,7 @@
             <el-input prefix-icon="el-icon-link" :value="origin"></el-input>
           </el-dialog>
           <el-dialog title="收藏直播间" :visible.sync="displayFav" :close-on-click-modal="false"
-                     :close-on-press-escape="false" :show-close="true" width="30%">
+                     :close-on-press-escape="false" :show-close="true" width="35%">
             <el-select v-model="favSelected" placeholder="请选择收藏夹" style="margin-right: 20px">
               <el-option
                   v-for="list in favLists"
@@ -67,6 +67,16 @@ export default {
       return "热度: " + util.transformNum(this.hot)
     }
   },
+  watch: {
+    room: function (val) {
+      this.room = val
+      this.$store.commit("player/setRoom", {room: val})
+    },
+    plat: function (val) {
+      this.plat = val
+      this.$store.commit("player/setPlat", {plat: val})
+    }
+  },
   methods: {
     init() {
       const options = {
@@ -98,8 +108,8 @@ export default {
       this.$axios.post(`${this.$store.getters["player/getHTTP"]}/fav/add`, {
         fid: this.favSelected,
         order: 1,
-        plat: this.plat,
-        room: this.room,
+        plat: this.$store.state.player.plat,
+        room: this.$store.state.player.room,
         upper: this.$store.state.player.upper
       }).then(resp => {
         const d = resp.data
@@ -131,8 +141,8 @@ export default {
     getRoomInfo() {
       this.$axios.get(`${this.$store.getters["player/getHTTP"]}/live/room_info`, {
         params: {
-          plat: this.plat,
-          room: this.room
+          plat: this.$store.state.player.plat,
+          room: this.$store.state.player.room
         }
       }).then(this.getRoomInfoSucc)
     },
@@ -166,6 +176,7 @@ export default {
 
       this.$store.commit('player/setTitle', {title: d.data.title});
       this.$store.commit('player/setUpper', {upper: d.data.upper});
+      document.title = `pure-live - ${d.data.title}`
 
       this.room = d.data.room
       this.roomLink = d.data.link
@@ -175,8 +186,8 @@ export default {
     getPlayURL() {
       this.$axios.get(`${this.$store.getters["player/getHTTP"]}/live/play_url`, {
         params: {
-          plat: this.plat,
-          room: this.room
+          plat: this.$store.state.player.plat,
+          room: this.$store.state.player.room
         }
       }).then(this.getPlayURLSucc)
     },
@@ -247,7 +258,7 @@ export default {
         content: data.text,
         type: data.type,// 1:顶部 0:滚动 2:底部
         color: data.color,
-      }).then(function (resp) {
+      }).then(resp => {
         console.log(resp);
         const d = resp.data;
         if (d.code !== 0) {
@@ -263,15 +274,14 @@ export default {
     window.flvjs = flvJS
     window.hlsjs = hlsJS
     this.init();
-
   },
   data() {
     return {
       ws: null,
       player: null,
-      plat: "bilibili",
+      plat: "",
       hot: 0,
-      room: "462",
+      room: "",
       origin: "",
       roomLink: "",
       displayOrigin: false,
@@ -284,6 +294,12 @@ export default {
     this.player.danmaku.clear();
     if (this.ws !== null) {
       this.player.play();
+    }
+    this.room = this.$store.state.player.room
+    this.plat = this.$store.state.player.plat
+    if (this.$store.state.player.playStatus === 1) {
+      this.getRoomInfo()
+      this.$store.commit("player/setStatus", {playStatus: 0})
     }
   },
   deactivated() {
