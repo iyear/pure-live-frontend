@@ -139,6 +139,11 @@ export default {
       }
     },
     getRoomInfo() {
+      if (this.ws !== null) {
+        this.$router.replace(`/live?room=${this.$store.state.player.room}&plat=${this.$store.state.player.plat}`)
+        location.reload()
+        return
+      }
       this.$axios.get(`${this.$store.getters["player/getHTTP"]}/live/room_info`, {
         params: {
           plat: this.$store.state.player.plat,
@@ -274,6 +279,13 @@ export default {
     window.flvjs = flvJS
     window.hlsjs = hlsJS
     this.init();
+    const q = this.$route.query
+    if (q.room !== undefined && q.plat !== undefined) {
+      this.$store.commit("player/setRoom", {room: q.room})
+      this.$store.commit("player/setPlat", {plat: q.plat})
+      this.$router.replace("/live")
+      this.getRoomInfo()
+    }
   },
   data() {
     return {
