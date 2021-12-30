@@ -307,12 +307,6 @@ export default {
     if (this.ws !== null) {
       this.player.play();
     }
-    this.room = this.$store.state.player.room
-    this.plat = this.$store.state.player.plat
-    if (this.$store.state.player.playStatus === 1) {
-      this.getRoomInfo()
-      this.$store.commit("player/setStatus", {playStatus: 0})
-    }
   },
   deactivated() {
     this.player.danmaku.clear();
