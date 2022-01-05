@@ -5,7 +5,8 @@
         <el-table :data="favs" style="width: 100%" max-height="500">
           <el-table-column label="播放" width="70">
             <template slot-scope="scope">
-              <el-button icon="el-icon-video-play" type="primary" size="small" @click="play(scope.row)"
+              <el-button icon="el-icon-video-play" :type="favInfo[scope.row.id].status===1?'primary':''" size="small"
+                         @click="play(scope.row)"
                          circle></el-button>
             </template>
           </el-table-column>
@@ -233,6 +234,20 @@ export default {
         this.favs = d.data.favorites.sort(function (a, b) {
           return b.order - a.order
         })
+
+        let req = [];
+        this.favs.forEach((fav) => {
+          req.push({
+            id: fav.id,
+            plat: fav.plat,
+            room: fav.room
+          })
+        })
+        this.$axios.post(`${this.$store.getters["player/getHTTP"]}/live/room_infos`, req)
+            .then(resp => {
+              this.favInfo = resp.data.data;
+              console.log(resp.data.data);
+            })
       })
     },
     getFavLists() {
@@ -261,6 +276,7 @@ export default {
       favLists: [],
       favs: [],
       favSelected: {},
+      favInfo: {},
       favListSelected: 0,
       favListAddForm: {
         title: "新增收藏夹",

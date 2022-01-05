@@ -282,6 +282,8 @@ export default {
     const q = this.$route.query
     if (q.room !== undefined && q.plat !== undefined) {
       this.$store.commit("player/setRoom", {room: q.room})
+      this.room = q.room
+      this.plat = q.plat
       this.$store.commit("player/setPlat", {plat: q.plat})
       this.$router.replace("/live")
       this.getRoomInfo()
