@@ -285,7 +285,6 @@ export default {
       this.room = q.room
       this.plat = q.plat
       this.$store.commit("player/setPlat", {plat: q.plat})
-      this.$router.replace("/live")
       this.getRoomInfo()
     }
   },
