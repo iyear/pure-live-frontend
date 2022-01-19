@@ -59,7 +59,8 @@ export default new Vuex.Store({
         plats: [
             {id: "bilibili", name: "哔哩哔哩"},
             {id: "huya", name: "虎牙"},
-            {id: "douyu", name: "斗鱼"}
+            {id: "douyu", name: "斗鱼"},
+            {id: "egame", name: "企鹅电竞"}
         ]
     }),
     mutations: {},
