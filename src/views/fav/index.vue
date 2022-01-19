@@ -238,7 +238,7 @@ export default {
         let req = [];
         this.favs.forEach((fav) => {
           req.push({
-            id: fav.id,
+            id: fav.id.toString(),
             plat: fav.plat,
             room: fav.room
           })
