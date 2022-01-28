@@ -60,7 +60,8 @@ export default new Vuex.Store({
             {id: "bilibili", name: "哔哩哔哩"},
             {id: "huya", name: "虎牙"},
             {id: "douyu", name: "斗鱼"},
-            {id: "egame", name: "企鹅电竞"}
+            {id: "egame", name: "企鹅电竞"},
+            {id: "inke", name: "映客"}
         ]
     }),
     mutations: {},
