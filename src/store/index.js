@@ -1,3 +1,4 @@
+// import third-party modules
 import Vue from 'vue';
 import Vuex from 'vuex';
 

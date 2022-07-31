@@ -2,7 +2,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 // import local modules
-import Layout from '../layout/Layout.vue';
+import Layout from '@/layout/Layout.vue';
 
 Vue.use(VueRouter);
 
@@ -14,7 +14,7 @@ const routes = [
     children: [{
       path: 'live',
       name: 'Live',
-      component: () => import('../views/live/index.vue'),
+      component: () => import('@/views/live/index.vue'),
     }],
   },
   {
@@ -25,7 +25,7 @@ const routes = [
     children: [
       {
         path: 'manage',
-        component: () => import('../pages/Fav.vue'),
+        component: () => import('@/pages/Fav.vue'),
         name: 'FavManage',
       },
     ],
