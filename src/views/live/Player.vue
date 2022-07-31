@@ -25,28 +25,17 @@
             </el-dropdown-menu>
           </el-dropdown>
           <el-dialog title="直播流" :visible.sync="displayOrigin" :close-on-click-modal="false"
-                     :close-on-press-escape="false" :show-close="true">
+            :close-on-press-escape="false" :show-close="true">
             <el-input prefix-icon="el-icon-link" :value="origin"></el-input>
           </el-dialog>
           <el-dialog title="收藏直播间" :visible.sync="displayFav" :close-on-click-modal="false"
-                     :close-on-press-escape="false" :show-close="true" width="35%">
+            :close-on-press-escape="false" :show-close="true" width="35%">
             <el-select v-model="favSelected" placeholder="请选择收藏夹" style="margin-right: 20px">
-              <el-option
-                  v-for="list in favLists"
-                  :key="list.id"
-                  :label="list.title"
-                  :value="list.id">
+              <el-option v-for="list in favLists" :key="list.id" :label="list.title" :value="list.id">
               </el-option>
             </el-select>
             <el-button @click="addFav" type="primary" round>确定</el-button>
           </el-dialog>
-        </el-col>
-        <el-col :span="6">
-          <el-alert
-              :title="getHot"
-              type="error"
-              :closable="false">
-          </el-alert>
         </el-col>
       </el-row>
     </el-container>
@@ -62,39 +51,33 @@ import util from "./util"
 
 export default {
   name: "Player",
-  computed: {
-    getHot() {
-      return "热度: " + util.transformNum(this.hot)
-    }
-  },
   watch: {
     room: function (val) {
       this.room = val
-      this.$store.commit("player/setRoom", {room: val})
+      this.$store.commit("player/setRoom", { room: val })
     },
     plat: function (val) {
       this.plat = val
-      this.$store.commit("player/setPlat", {plat: val})
+      this.$store.commit("player/setPlat", { plat: val })
     }
   },
   methods: {
     init() {
       const options = {
         container: document.getElementById('player'),
-        live: true,
-        hotkey: true,
-        screenshot: true,
-        danmaku: true,
-        video: {
-          // url:"https://usher.ttvnw.net/api/channel/hls/tsm_imperialhal.m3u8?allow_source=true&dt=2&fast_bread=true&player_backend=mediaplayer&playlist_include_framerate=true&reassignments_supported=true&sig=d0385e3ce933c8fe76ff6a9a4d9ce01e29b04f6b&supported_codecs=vp09%2Cavc1&token=%7B%22adblock%22%3Afalse%2C%22authorization%22%3A%7B%22forbidden%22%3Afalse%2C%22reason%22%3A%22%22%7D%2C%22blackout_enabled%22%3Afalse%2C%22channel%22%3A%22tsm_imperialhal%22%2C%22channel_id%22%3A146922206%2C%22chansub%22%3A%7B%22restricted_bitrates%22%3A%5B%5D%2C%22view_until%22%3A1924905600%7D%2C%22ci_gb%22%3Afalse%2C%22geoblock_reason%22%3A%22%22%2C%22device_id%22%3Anull%2C%22expires%22%3A1638161547%2C%22extended_history_allowed%22%3Afalse%2C%22game%22%3A%22%22%2C%22hide_ads%22%3Afalse%2C%22https_required%22%3Atrue%2C%22mature%22%3Afalse%2C%22partner%22%3Afalse%2C%22platform%22%3A%22web%22%2C%22player_type%22%3A%22site%22%2C%22private%22%3A%7B%22allowed_to_view%22%3Atrue%7D%2C%22privileged%22%3Afalse%2C%22role%22%3A%22%22%2C%22server_ads%22%3Atrue%2C%22show_ads%22%3Atrue%2C%22subscriber%22%3Afalse%2C%22turbo%22%3Afalse%2C%22user_id%22%3Anull%2C%22user_ip%22%3A%22203.175.12.116%22%2C%22version%22%3A2%7D&cdm=wv&player_version=1.4.0",
-          // type:"hls"
-        },
+        airplay: false,
         apiBackend: {
           read: function (option) {
             option.success();
           },
-          send: this.sendDanmaku
         },
+        danmaku: true,
+        hotkey: true,
+        live: true,
+        volume: 0.7,
+        video: {
+        },
+
       }
       this.player = new DPlayer(options);
       this.player.on("play", this.onPlay)
@@ -153,19 +136,19 @@ export default {
     },
     getFavLists() {
       this.$axios.get(`${this.$store.getters["player/getHTTP"]}/fav/list/get_all`)
-          .then(resp => {
-            const d = resp.data
-            console.log(d);
-            if (d.code !== 0) {
-              this.$message.error(`获取收藏夹列表失败: ${d.msg}`)
-              return
-            }
-            this.favLists = d.data
-            this.favLists.sort(function (a, b) {
-              return b.order - a.order
-            })
-            console.log(this.favLists);
+        .then(resp => {
+          const d = resp.data
+          console.log(d);
+          if (d.code !== 0) {
+            this.$message.error(`获取收藏夹列表失败: ${d.msg}`)
+            return
+          }
+          this.favLists = d.data
+          this.favLists.sort(function (a, b) {
+            return b.order - a.order
           })
+          console.log(this.favLists);
+        })
     },
     getRoomInfoSucc(resp) {
       console.log(resp.data);
@@ -179,8 +162,8 @@ export default {
         return;
       }
 
-      this.$store.commit('player/setTitle', {title: d.data.title});
-      this.$store.commit('player/setUpper', {upper: d.data.upper});
+      this.$store.commit('player/setTitle', { title: d.data.title });
+      this.$store.commit('player/setUpper', { upper: d.data.upper });
       document.title = `pure-live - ${d.data.title}`
 
       this.room = d.data.room
@@ -223,7 +206,9 @@ export default {
       this.ws = new WebSocket(`${this.$store.getters["player/getWS"]}/live/serve?room=${this.room}&plat=${this.plat}`)
       // console.log(document.cookie);
       this.ws.onopen = () => {
-        this.$store.commit('player/setUUID', {uuid: util.getCookie('uuid')})
+        this.$store.commit('player/setUUID', {
+          uuid: util.getCookie('uuid')
+        })
       }
       this.ws.onmessage = this.wsOnMsg;
     },
@@ -256,24 +241,6 @@ export default {
         }
       }
     },
-    sendDanmaku(options) {
-      const data = options.data
-      this.$axios.post(`${this.$store.getters["player/getHTTP"]}/live/danmaku/send`, {
-        id: this.$store.state.player.uuid,
-        content: data.text,
-        type: data.type,// 1:顶部 0:滚动 2:底部
-        color: data.color,
-      }).then(resp => {
-        console.log(resp);
-        const d = resp.data;
-        if (d.code !== 0) {
-          this.$message.error(`发送失败!错误: ${d.msg}`);
-          return;
-        }
-        this.$message.success('发送成功!')
-      })
-
-    }
   },
   mounted() {
     window.flvjs = flvJS
@@ -281,10 +248,10 @@ export default {
     this.init();
     const q = this.$route.query
     if (q.room !== undefined && q.plat !== undefined) {
-      this.$store.commit("player/setRoom", {room: q.room})
+      this.$store.commit("player/setRoom", { room: q.room })
       this.room = q.room
       this.plat = q.plat
-      this.$store.commit("player/setPlat", {plat: q.plat})
+      this.$store.commit("player/setPlat", { plat: q.plat })
       this.getRoomInfo()
     }
   },
@@ -388,5 +355,4 @@ export default {
     animation: danmaku 36s linear;
   }
 }
-
 </style>

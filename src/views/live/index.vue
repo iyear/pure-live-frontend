@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import Player from "@/views/live/Player";
+import Player from "./Player.vue";
 
 export default {
   name: "Live",

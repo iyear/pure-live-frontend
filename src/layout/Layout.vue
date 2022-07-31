@@ -16,12 +16,11 @@
       </el-main>
     </el-container>
   </el-container>
-
 </template>
 
 <script>
-import SideBar from "./SideBar";
-import NavBar from "./NavBar";
+import SideBar from "./SideBar.vue";
+import NavBar from "./NavBar.vue";
 
 export default {
   name: 'Layout',
