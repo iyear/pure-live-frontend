@@ -1,7 +1,14 @@
 <template>
-  <el-menu router :default-active="$route.path">
-    <el-menu-item v-for="(item,i) in items" :key="i" :index="item.path">
-      <i :class="item.icon"></i>
+  <el-menu
+    router
+    :default-active="$route.path"
+  >
+    <el-menu-item
+      v-for="(item,i) in items"
+      :key="i"
+      :index="item.path"
+    >
+      <i :class="item.icon" />
       <span>{{ item.title }}</span>
     </el-menu-item>
   </el-menu>
@@ -11,7 +18,6 @@
 export default {
   name: "SideBar",
   props: {},
-  methods: {},
   data() {
     return {
       items: [
@@ -20,6 +26,7 @@ export default {
       ]
     }
   },
+  methods: {},
 }
 </script>
 

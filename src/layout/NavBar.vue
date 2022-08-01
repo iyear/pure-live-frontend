@@ -4,10 +4,10 @@
       Pure-Live
     </div>
     <div class="el-page-header__content title">
-      {{ this.$store.state.player.title }}
+      {{ $store.state.player.title }}
     </div>
     <div class="el-page-header__content upper">
-      {{ this.$store.state.player.upper }}
+      {{ $store.state.player.upper }}
     </div>
   </div>
 </template>

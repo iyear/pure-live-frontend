@@ -23,3 +23,9 @@ install:
 	@echo -e "\033[32mInstalling dependencies...\033[0m"
 	$(PNPM) install
 	@echo -e "\033[32mDependencies installed.\033[0m"
+# Lint the code
+.PHONY: lint
+lint:
+	@echo -e "\033[32mLinting the code...\033[0m"
+	$(PNPM) run lint
+	@echo -e "\033[32mLinting finished.\033[0m"

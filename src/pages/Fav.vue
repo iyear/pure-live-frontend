@@ -1,129 +1,333 @@
 <template>
   <div>
-    <el-tabs tab-position="left" @tab-click="favSelectedChange">
-      <el-tab-pane v-for="item in favLists" :key="item.id" :label="item.title">
-        <el-table :data="favs" style="width: 100%" max-height="500">
-          <el-table-column label="播放" width="70">
+    <el-tabs
+      tab-position="left"
+      @tab-click="favSelectedChange"
+    >
+      <el-tab-pane
+        v-for="item in favLists"
+        :key="item.id"
+        :label="item.title"
+      >
+        <el-table
+          :data="favs"
+          style="width: 100%"
+          max-height="500"
+        >
+          <el-table-column
+            label="播放"
+            width="70"
+          >
             <template slot-scope="scope">
-              <el-button icon="el-icon-video-play" :type="favInfo[scope.row.id].status===1?'primary':''" size="small"
-                         @click="play(scope.row)"
-                         circle></el-button>
+              <el-button
+                icon="el-icon-video-play"
+                :type="favInfo[scope.row.id].status===1?'primary':''"
+                size="small"
+                circle
+                @click="play(scope.row)"
+              />
             </template>
           </el-table-column>
-          <el-table-column label="ID" width="70">
+          <el-table-column
+            label="ID"
+            width="70"
+          >
             <template slot-scope="scope">
-              <el-tag effect="dark" type="info">{{ scope.row.id }}</el-tag>
+              <el-tag
+                effect="dark"
+                type="info"
+              >
+                {{ scope.row.id }}
+              </el-tag>
             </template>
           </el-table-column>
-          <el-table-column label="平台" width="100">
+          <el-table-column
+            label="平台"
+            width="100"
+          >
             <template slot-scope="scope">
-              <el-tag effect="dark" type="info">{{ $store.getters.getPlat(scope.row.plat).name }}</el-tag>
+              <el-tag
+                effect="dark"
+                type="info"
+              >
+                {{ $store.getters.getPlat(scope.row.plat).name }}
+              </el-tag>
             </template>
           </el-table-column>
-          <el-table-column label="房间" width="100">
+          <el-table-column
+            label="房间"
+            width="100"
+          >
             <template slot-scope="scope">
-              <el-tag effect="dark">{{ scope.row.room }}</el-tag>
+              <el-tag effect="dark">
+                {{ scope.row.room }}
+              </el-tag>
             </template>
           </el-table-column>
-          <el-table-column label="主播" width="200">
+          <el-table-column
+            label="主播"
+            width="200"
+          >
             <template slot-scope="scope">
-              <el-tag effect="dark">{{ scope.row.upper }}</el-tag>
+              <el-tag effect="dark">
+                {{ scope.row.upper }}
+              </el-tag>
             </template>
           </el-table-column>
-          <el-table-column label="排序" width="70">
+          <el-table-column
+            label="排序"
+            width="70"
+          >
             <template slot-scope="scope">
-              <el-tag effect="dark" type="info">{{ scope.row.order }}</el-tag>
+              <el-tag
+                effect="dark"
+                type="info"
+              >
+                {{ scope.row.order }}
+              </el-tag>
             </template>
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
-              <el-button size="mini" @click="startEditFav(scope.row)" style="margin-right: 10px">编辑</el-button>
-              <el-popconfirm icon="el-icon-info" icon-color="red" :title="'确定要删除'+scope.row.upper+'的直播间吗?'"
-                             @confirm="favDel(scope.row)">
-                <el-button size="mini" type="danger" slot="reference">删除</el-button>
+              <el-button
+                size="mini"
+                style="margin-right: 10px"
+                @click="startEditFav(scope.row)"
+              >
+                编辑
+              </el-button>
+              <el-popconfirm
+                icon="el-icon-info"
+                icon-color="red"
+                :title="'确定要删除'+scope.row.upper+'的直播间吗?'"
+                @confirm="favDel(scope.row)"
+              >
+                <el-button
+                  slot="reference"
+                  size="mini"
+                  type="danger"
+                >
+                  删除
+                </el-button>
               </el-popconfirm>
             </template>
           </el-table-column>
         </el-table>
       </el-tab-pane>
     </el-tabs>
-    <el-button type="primary" size="small" round style="margin-top: 10px" @click="addFavListDisPlay=true">
+    <el-button
+      type="primary"
+      size="small"
+      round
+      style="margin-top: 10px"
+      @click="addFavListDisPlay=true"
+    >
       新增
     </el-button>
-    <el-button type="primary" size="small" round style="margin-top: 10px" @click="editFavListDisPlay=true">
+    <el-button
+      type="primary"
+      size="small"
+      round
+      style="margin-top: 10px"
+      @click="editFavListDisPlay=true"
+    >
       编辑
     </el-button>
-    <el-popconfirm icon="el-icon-info" icon-color="red" :title="'确定要删除['+favListSelected.title+']收藏夹吗?'"
-                   @confirm="favListDel(favListSelected)">
-      <el-button size="small" type="danger" round slot="reference" style="margin-left: 7px">删除</el-button>
+    <el-popconfirm
+      icon="el-icon-info"
+      icon-color="red"
+      :title="'确定要删除['+favListSelected.title+']收藏夹吗?'"
+      @confirm="favListDel(favListSelected)"
+    >
+      <el-button
+        slot="reference"
+        size="small"
+        type="danger"
+        round
+        style="margin-left: 7px"
+      >
+        删除
+      </el-button>
     </el-popconfirm>
-    <el-dialog title="编辑收藏项" :visible.sync="editFavDisplay" :close-on-click-modal="false" width="30%"
-               @close="loadFavList(favSelected.fid)">
-      <el-form label-position="right" size="small" :inline="true">
+    <el-dialog
+      title="编辑收藏项"
+      :visible.sync="editFavDisplay"
+      :close-on-click-modal="false"
+      width="30%"
+      @close="loadFavList(favSelected.fid)"
+    >
+      <el-form
+        label-position="right"
+        size="small"
+        :inline="true"
+      >
         <el-form-item label="ID :">
-          <el-tag size="small">{{ favSelected.id }}</el-tag>
+          <el-tag size="small">
+            {{ favSelected.id }}
+          </el-tag>
         </el-form-item>
         <el-form-item label="排序 :">
-          <el-input-number :min="0" :max="100" size="small" v-model="favSelected.order"></el-input-number>
+          <el-input-number
+            v-model="favSelected.order"
+            :min="0"
+            :max="100"
+            size="small"
+          />
         </el-form-item>
         <el-form-item label="平台 :">
-          <el-select v-model="favSelected.plat" placeholder="请选择平台">
-            <el-option v-for="(plat,i) in $store.state.plats" :key="i" :label="plat.name" :value="plat.id"></el-option>
+          <el-select
+            v-model="favSelected.plat"
+            placeholder="请选择平台"
+          >
+            <el-option
+              v-for="(plat,i) in $store.state.plats"
+              :key="i"
+              :label="plat.name"
+              :value="plat.id"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="房间 :">
-          <el-input v-model="favSelected.room"></el-input>
+          <el-input v-model="favSelected.room" />
         </el-form-item>
         <el-form-item label="主播 :">
-          <el-input v-model="favSelected.upper"></el-input>
+          <el-input v-model="favSelected.upper" />
         </el-form-item>
         <el-form-item label="创建时间 :">
-          <el-tag size="small">{{ transformTime(favSelected['created_at']) }}</el-tag>
+          <el-tag size="small">
+            {{ transformTime(favSelected['created_at']) }}
+          </el-tag>
         </el-form-item>
         <el-form-item label="上次修改 :">
-          <el-tag size="small">{{ transformTime(favSelected['updated_at']) }}</el-tag>
+          <el-tag size="small">
+            {{ transformTime(favSelected['updated_at']) }}
+          </el-tag>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="editFavDisplay = false">取 消</el-button>
-        <el-button type="primary" @click="confirmEdit">确 定</el-button>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="editFavDisplay = false">
+          取 消
+        </el-button>
+        <el-button
+          type="primary"
+          @click="confirmEdit"
+        >
+          确 定
+        </el-button>
       </div>
     </el-dialog>
-    <el-dialog title="新增收藏夹" :visible.sync="addFavListDisPlay" :close-on-click-modal="false" width="30%">
-      <el-form label-position="right" size="small" :inline="true">
-        <el-form-item label="标题 :" prop="title">
-          <el-input :minlength="2" :maxlength="60" v-model="favListAddForm.title"></el-input>
+    <el-dialog
+      title="新增收藏夹"
+      :visible.sync="addFavListDisPlay"
+      :close-on-click-modal="false"
+      width="30%"
+    >
+      <el-form
+        label-position="right"
+        size="small"
+        :inline="true"
+      >
+        <el-form-item
+          label="标题 :"
+          prop="title"
+        >
+          <el-input
+            v-model="favListAddForm.title"
+            :minlength="2"
+            :maxlength="60"
+          />
         </el-form-item>
-        <el-form-item label="排序 :" prop="order">
-          <el-input-number :min="0" :max="100" size="small" v-model="favListAddForm.order"></el-input-number>
+        <el-form-item
+          label="排序 :"
+          prop="order"
+        >
+          <el-input-number
+            v-model="favListAddForm.order"
+            :min="0"
+            :max="100"
+            size="small"
+          />
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="getFavLists();addFavListDisplay = false">取 消</el-button>
-        <el-button type="primary" @click="confirmAddList">确 定</el-button>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="getFavLists();addFavListDisplay = false">
+          取 消
+        </el-button>
+        <el-button
+          type="primary"
+          @click="confirmAddList"
+        >
+          确 定
+        </el-button>
       </div>
     </el-dialog>
-    <el-dialog title="编辑收藏夹" :visible.sync="editFavListDisPlay" :close-on-click-modal="false" width="20%">
-      <el-form label-position="right" size="small" :inline="true">
+    <el-dialog
+      title="编辑收藏夹"
+      :visible.sync="editFavListDisPlay"
+      :close-on-click-modal="false"
+      width="20%"
+    >
+      <el-form
+        label-position="right"
+        size="small"
+        :inline="true"
+      >
         <el-form-item label="ID :">
-          <el-tag size="small">{{ favListSelected.id }}</el-tag>
+          <el-tag size="small">
+            {{ favListSelected.id }}
+          </el-tag>
         </el-form-item>
-        <el-form-item label="标题 :" prop="title">
-          <el-input :minlength="2" :maxlength="60" v-model="favListSelected.title"></el-input>
+        <el-form-item
+          label="标题 :"
+          prop="title"
+        >
+          <el-input
+            v-model="favListSelected.title"
+            :minlength="2"
+            :maxlength="60"
+          />
         </el-form-item>
-        <el-form-item label="排序 :" prop="order">
-          <el-input-number :min="0" :max="100" size="small" v-model="favListSelected.order"></el-input-number>
+        <el-form-item
+          label="排序 :"
+          prop="order"
+        >
+          <el-input-number
+            v-model="favListSelected.order"
+            :min="0"
+            :max="100"
+            size="small"
+          />
         </el-form-item>
         <el-form-item label="创建时间 :">
-          <el-tag size="small">{{ transformTime(favListSelected['created_at']) }}</el-tag>
+          <el-tag size="small">
+            {{ transformTime(favListSelected['created_at']) }}
+          </el-tag>
         </el-form-item>
         <el-form-item label="上次修改 :">
-          <el-tag size="small">{{ transformTime(favListSelected['updated_at']) }}</el-tag>
+          <el-tag size="small">
+            {{ transformTime(favListSelected['updated_at']) }}
+          </el-tag>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="getFavLists();editFavListDisPlay=false">取 消</el-button>
-        <el-button type="primary" @click="confirmEditList">确 定</el-button>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="getFavLists();editFavListDisPlay=false">
+          取 消
+        </el-button>
+        <el-button
+          type="primary"
+          @click="confirmEditList"
+        >
+          确 定
+        </el-button>
       </div>
     </el-dialog>
   </div>
@@ -133,7 +337,27 @@
 import moment from "moment";
 
 export default {
-  name: "index",
+  name: "FavIndex",
+  data() {
+    return {
+      favLists: [],
+      favs: [],
+      favSelected: {},
+      favInfo: {},
+      favListSelected: 0,
+      favListAddForm: {
+        title: "新增收藏夹",
+        order: 1
+      },
+      editFavDisplay: false,
+      addFavListDisPlay: false,
+      editFavListDisPlay: false,
+      favForm: {}
+    }
+  },
+  mounted() {
+    this.getFavLists()
+  },
   methods: {
     transformTime(unix) {
       return moment.unix(unix).format("YYYY-MM-DD HH:mm")
@@ -267,26 +491,6 @@ export default {
             this.favSelectedChange({index: 0})
           })
     },
-  },
-  mounted() {
-    this.getFavLists()
-  },
-  data() {
-    return {
-      favLists: [],
-      favs: [],
-      favSelected: {},
-      favInfo: {},
-      favListSelected: 0,
-      favListAddForm: {
-        title: "新增收藏夹",
-        order: 1
-      },
-      editFavDisplay: false,
-      addFavListDisPlay: false,
-      editFavListDisPlay: false,
-      favForm: {}
-    }
   }
 }
 </script>

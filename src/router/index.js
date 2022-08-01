@@ -14,7 +14,7 @@ const routes = [
     children: [{
       path: 'live',
       name: 'Live',
-      component: () => import('@/views/live/index.vue'),
+      component: () => import('@/pages/Player.vue'),
     }],
   },
   {

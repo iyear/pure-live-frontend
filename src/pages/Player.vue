@@ -1,56 +1,139 @@
 <template>
   <div>
-    <div id="player"></div>
-    <el-container style="margin-top: 15px">
-      <el-row :gutter="20">
-        <el-col :span="6">
-          <el-select v-model="plat" placeholder="请选择平台">
-            <el-option v-for="plat in this.$store.state.plats" :key="plat.id" :label="plat.name" :value="plat.id">
-            </el-option>
+    <el-row>
+      <el-col :span="24">
+        <div id="player" />
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :span="4">
+        <el-select 
+          v-model="plat"
+          placeholder="请选择平台"
+        >
+          <el-option 
+            v-for="plat in $store.state.plats"
+            :key="plat.id" 
+            :label="plat.name" 
+            :value="plat.id"
+          />
+        </el-select>
+      </el-col>
+      <el-col :span="4">
+        <el-input
+          v-model="room"
+          placeholder="RoomID"
+        />
+      </el-col>
+      <el-col :span="2">
+        <el-button
+          type="primary"
+          round
+          @click="getRoomInfo"
+        >
+          Load
+        </el-button>
+      </el-col>
+      <el-col :span="2">
+        <el-dropdown
+          trigger="hover"
+          :show-timeout="100"
+          placement="bottom"
+          @command="menuHandle"
+        >
+          <i
+            class="el-icon-more"
+            style="margin-top: 12px"
+          />
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item
+              command="goto"
+              icon="el-icon-top-right"
+            >
+              前往直播间
+            </el-dropdown-item>
+            <el-dropdown-item
+              command="get"
+              icon="el-icon-link"
+            >
+              复制直播流地址
+            </el-dropdown-item>
+            <el-dropdown-item
+              command="fav"
+              icon="el-icon-star-on"
+            >
+              收藏
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+        <el-dialog
+          title="直播流"
+          :visible.sync="displayOrigin"
+          :close-on-click-modal="false"
+          :close-on-press-escape="false"
+          :show-close="true"
+        >
+          <el-input
+            prefix-icon="el-icon-link"
+            :value="origin"
+          />
+        </el-dialog>
+        <el-dialog
+          title="收藏直播间"
+          :visible.sync="displayFav"
+          :close-on-click-modal="false"
+          :close-on-press-escape="false"
+          :show-close="true"
+          width="35%"
+        >
+          <el-select
+            v-model="favSelected"
+            placeholder="请选择收藏夹"
+            style="margin-right: 20px"
+          >
+            <el-option
+              v-for="list in favLists"
+              :key="list.id"
+              :label="list.title"
+              :value="list.id"
+            />
           </el-select>
-        </el-col>
-        <el-col :span="6">
-          <el-input v-model="room" placeholder="RoomID"></el-input>
-        </el-col>
-        <el-col :span="4">
-          <el-button @click="getRoomInfo" type="primary" round>Load</el-button>
-        </el-col>
-        <el-col :span="2">
-          <el-dropdown trigger="hover" :show-timeout="100" placement="bottom" @command="menuHandle">
-            <i class="el-icon-more" style="margin-top: 12px"></i>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item command="goto" icon="el-icon-top-right">前往直播间</el-dropdown-item>
-              <el-dropdown-item command="get" icon="el-icon-link">复制直播流地址</el-dropdown-item>
-              <el-dropdown-item command="fav" icon="el-icon-star-on">收藏</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-          <el-dialog title="直播流" :visible.sync="displayOrigin" :close-on-click-modal="false"
-            :close-on-press-escape="false" :show-close="true">
-            <el-input prefix-icon="el-icon-link" :value="origin"></el-input>
-          </el-dialog>
-          <el-dialog title="收藏直播间" :visible.sync="displayFav" :close-on-click-modal="false"
-            :close-on-press-escape="false" :show-close="true" width="35%">
-            <el-select v-model="favSelected" placeholder="请选择收藏夹" style="margin-right: 20px">
-              <el-option v-for="list in favLists" :key="list.id" :label="list.title" :value="list.id">
-              </el-option>
-            </el-select>
-            <el-button @click="addFav" type="primary" round>确定</el-button>
-          </el-dialog>
-        </el-col>
-      </el-row>
-    </el-container>
+          <el-button
+            type="primary"
+            round
+            @click="addFav"
+          >
+            确定
+          </el-button>
+        </el-dialog>
+      </el-col>
+    </el-row>
   </div>
-
 </template>
 
 <script>
 import DPlayer from 'dplayer';
 import flvJS from 'flv.js'
 import hlsJS from 'hls.js'
-import util from "./util"
+import util from "@/utils/util"
 
 export default {
-  name: "Player",
+  name: "PlayerIndex",
+  data() {
+    return {
+      ws: null,
+      player: null,
+      plat: "",
+      hot: 0,
+      room: "",
+      origin: "",
+      roomLink: "",
+      displayOrigin: false,
+      displayFav: false,
+      favSelected: 1,
+      favLists: []
+    }
+  },
   watch: {
     room: function (val) {
       this.room = val
@@ -59,6 +142,31 @@ export default {
     plat: function (val) {
       this.plat = val
       this.$store.commit("player/setPlat", { plat: val })
+    }
+  },
+  mounted() {
+    window.flvjs = flvJS
+    window.hlsjs = hlsJS
+    this.init();
+    const q = this.$route.query
+    if (q.room !== undefined && q.plat !== undefined) {
+      this.$store.commit("player/setRoom", { room: q.room })
+      this.room = q.room
+      this.plat = q.plat
+      this.$store.commit("player/setPlat", { plat: q.plat })
+      this.getRoomInfo()
+    }
+  },
+  activated() {
+    this.player.danmaku.clear();
+    if (this.ws !== null) {
+      this.player.play();
+    }
+  },
+  deactivated() {
+    this.player.danmaku.clear();
+    if (this.ws !== null) {
+      this.player.pause();
     }
   },
   methods: {
@@ -241,46 +349,6 @@ export default {
         }
       }
     },
-  },
-  mounted() {
-    window.flvjs = flvJS
-    window.hlsjs = hlsJS
-    this.init();
-    const q = this.$route.query
-    if (q.room !== undefined && q.plat !== undefined) {
-      this.$store.commit("player/setRoom", { room: q.room })
-      this.room = q.room
-      this.plat = q.plat
-      this.$store.commit("player/setPlat", { plat: q.plat })
-      this.getRoomInfo()
-    }
-  },
-  data() {
-    return {
-      ws: null,
-      player: null,
-      plat: "",
-      hot: 0,
-      room: "",
-      origin: "",
-      roomLink: "",
-      displayOrigin: false,
-      displayFav: false,
-      favSelected: 1,
-      favLists: []
-    }
-  },
-  activated() {
-    this.player.danmaku.clear();
-    if (this.ws !== null) {
-      this.player.play();
-    }
-  },
-  deactivated() {
-    this.player.danmaku.clear();
-    if (this.ws !== null) {
-      this.player.pause();
-    }
   }
 }
 </script>
