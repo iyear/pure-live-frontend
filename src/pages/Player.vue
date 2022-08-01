@@ -2,6 +2,14 @@
   <div>
     <el-row>
       <el-col :span="24">
+        <span>
+          {{ $store.state.player.title }}
+        </span>
+        <span>
+          {{ $store.state.player.upper }}
+        </span>
+      </el-col>
+      <el-col :span="24">
         <div id="player" />
       </el-col>
     </el-row>
