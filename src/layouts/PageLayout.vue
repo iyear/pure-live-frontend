@@ -1,38 +1,41 @@
 <template>
   <el-container>
-    <el-header height="35px">
-      <NavBar />
+    <el-header>
+      <HeaderLayout />
     </el-header>
     <el-container>
       <el-aside width="200px">
-        <SideBar />
+        <SideLayout />
       </el-aside>
-      <el-main>
-        <el-collapse-transition>
+      <el-container>
+        <el-main>
           <keep-alive>
             <router-view />
           </keep-alive>
-        </el-collapse-transition>
-      </el-main>
+        </el-main>
+        <el-footer>
+          <FooterLayout />
+        </el-footer>
+      </el-container>
     </el-container>
   </el-container>
 </template>
 
 <script>
-import SideBar from "./SideBar";
-import NavBar from "./NavBar";
+import FooterLayout from "./FooterLayout";
+import HeaderLayout from "./HeaderLayout";
+import SideLayout from "./SideLayout";
 
 export default {
   name: 'PageLayout',
   components: {
-    SideBar,
-    NavBar,
+    FooterLayout,
+    HeaderLayout,
+    SideLayout,
   },
 }
 </script>
 
 <style scoped>
-.el-aside {
-  height: calc(100vh-35px);
-}
+
 </style>

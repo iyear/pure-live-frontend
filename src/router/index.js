@@ -24,6 +24,10 @@ const routes = [
     }
   },
   {
+    path: "/initialize",
+    component: () => import("@/pages/InitializePage")
+  },
+  {
     path: "/live",
     component: Layout,
     children: [

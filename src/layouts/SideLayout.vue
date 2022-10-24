@@ -9,7 +9,7 @@
 
 <script>
 export default {
-  name: "SideBar",
+  name: "SideLayout",
   data() {
     return {
       items: [
@@ -24,5 +24,9 @@ export default {
 <style scoped>
 .item {
   margin: 4px;
+}
+
+.el-menu {
+  height: calc(100vh-32px);
 }
 </style>
