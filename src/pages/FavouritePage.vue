@@ -133,7 +133,7 @@
 import moment from "moment";
 
 export default {
-  name: "index",
+  name: "FavouritePage",
   methods: {
     transformTime(unix) {
       return moment.unix(unix).format("YYYY-MM-DD HH:mm")

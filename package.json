@@ -1,56 +1,41 @@
 {
-  "name": "pure-live",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
-  },
-  "dependencies": {
-    "axios": "^0.24.0",
-    "clipboard": "^2.0.8",
-    "core-js": "^3.6.5",
-    "dplayer": "^1.26.0",
-    "element-ui": "^2.4.5",
-    "flv.js": "^1.6.2",
-    "hls.js": "^1.1.1",
-    "moment": "^2.29.2",
-    "vue": "^2.6.11",
-    "vue-router": "^3.2.0",
-    "vuex": "^3.4.0"
-  },
-  "devDependencies": {
-    "@types/dplayer": "^1.25.2",
-    "@vue/cli-plugin-babel": "~4.5.0",
-    "@vue/cli-plugin-eslint": "~4.5.0",
-    "@vue/cli-plugin-router": "~4.5.0",
-    "@vue/cli-plugin-vuex": "~4.5.0",
-    "@vue/cli-service": "~4.5.0",
-    "babel-eslint": "^10.1.0",
-    "eslint": "^6.7.2",
-    "eslint-plugin-vue": "^6.2.2",
-    "vue-cli-plugin-element": "^1.0.1",
-    "vue-template-compiler": "^2.6.11",
-    "webpack-bundle-analyzer": "^4.6.1"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
+    "name": "sirius-web",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "dev": "vue-cli-service serve",
+        "build": "vue-cli-service build",
+        "lint": "vue-cli-service lint"
     },
-    "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended"
-    ],
-    "parserOptions": {
-      "parser": "babel-eslint"
+    "dependencies": {
+        "axios": "^1.1.3",
+        "clipboard": "^2.0.11",
+        "core-js": "^3.8.3",
+        "dplayer": "^1.26.0",
+        "element-ui": "^2.15.10",
+        "flv.js": "^1.6.2",
+        "hls.js": "^1.1.1",
+        "moment": "^2.29.2",
+        "normalize.css": "^8.0.1",
+        "nprogress": "^0.2.0",
+        "register-service-worker": "^1.7.2",
+        "vue": "^2.6.14",
+        "vue-router": "^3.5.1",
+        "vuex": "^3.6.2"
     },
-    "rules": {}
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not dead"
-  ]
+    "devDependencies": {
+        "@babel/core": "^7.12.16",
+        "@babel/eslint-parser": "^7.12.16",
+        "@vue/cli-plugin-babel": "~5.0.0",
+        "@vue/cli-plugin-eslint": "~5.0.0",
+        "@vue/cli-plugin-pwa": "~5.0.0",
+        "@vue/cli-plugin-router": "~5.0.0",
+        "@vue/cli-plugin-vuex": "~5.0.0",
+        "@vue/cli-service": "~5.0.0",
+        "babel-plugin-component": "^1.1.1",
+        "eslint": "^7.32.0",
+        "eslint-plugin-vue": "^8.0.3",
+        "vue-cli-plugin-element": "^1.0.1",
+        "vue-template-compiler": "^2.6.14"
+    }
 }

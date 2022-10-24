@@ -1,6 +1,6 @@
 <template>
   <el-menu router :default-active="$route.path">
-    <el-menu-item v-for="(item,i) in items" :key="i" :index="item.path">
+    <el-menu-item v-for="(item,     i) in items" :key="i" :index="item.path">
       <i :class="item.icon"></i>
       <span>{{ item.title }}</span>
     </el-menu-item>
@@ -15,8 +15,8 @@ export default {
   data() {
     return {
       items: [
-        {icon: "el-icon-position", title: "直播间", path: "/live"},
-        {icon: "el-icon-star-off", title: "收藏夹", path: "/favourite"}
+        { icon: "el-icon-star-off", title: "收藏夹", path: "/" },
+        { icon: "el-icon-position", title: "直播间", path: "/live" },
       ]
     }
   },

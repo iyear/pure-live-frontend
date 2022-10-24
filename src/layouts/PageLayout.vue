@@ -24,7 +24,7 @@ import SideBar from "./SideBar";
 import NavBar from "./NavBar";
 
 export default {
-  name: 'Layout',
+  name: 'PageLayout',
   components: {
     SideBar,
     NavBar,

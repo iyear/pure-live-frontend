@@ -1,58 +1,11 @@
+// import third-party modules
 import Vue from 'vue'
 import Vuex from 'vuex'
+// import local modules
+import Favourite from './favourite';
+import Player from "./player";
 
 Vue.use(Vuex)
-
-const Favourite = {
-    namespaced: true,
-    state: () => ({}),
-    mutations: {},
-    actions: {},
-    getters: {}
-}
-
-const Player = {
-    namespaced: true,
-    state: () => ({
-        baseApi: `192.168.31.63:9998/api/v1`,
-        uuid: '',
-        plat: '',
-        room: '',
-        title: '',
-        upper: '',
-        // 用于收藏夹跳转和普通切换路由的判定
-        playStatus: 0
-    }),
-    mutations: {
-        setTitle(state, data) {
-            state.title = data.title
-        },
-        setUpper(state, data) {
-            state.upper = data.upper
-        },
-        setUUID(state, data) {
-            state.uuid = data.uuid
-        },
-        setRoom(state, data) {
-            state.room = data.room
-        },
-        setPlat(state, data) {
-            state.plat = data.plat
-        },
-        setStatus(state, data) {
-            state.playStatus = data.playStatus
-        }
-    },
-    actions: {},
-    getters: {
-        getHTTP(state) {
-            return "http://" + state.baseApi
-        },
-        getWS(state) {
-            return "ws://" + state.baseApi
-        }
-    }
-}
 
 export default new Vuex.Store({
     state: () => ({
@@ -72,6 +25,6 @@ export default new Vuex.Store({
     },
     modules: {
         player: Player,
-        fav: Favourite
+        favourite: Favourite
     }
 })

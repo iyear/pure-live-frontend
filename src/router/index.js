@@ -1,6 +1,11 @@
+// import third-party modules
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Layout from "@/layout/Layout";
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
+// import local modules
+import Layout from "@/layouts/PageLayout";
+import FavouritePage from '@/pages/FavouritePage'
 
 Vue.use(VueRouter)
 
@@ -8,24 +13,20 @@ const routes = [
     {
         path: "/",
         component: Layout,
-        redirect: "/live",
         children: [
             {
-                path: "live",
-                name: "Live",
-                component: () => import("@/pages/live")
+                path: "",
+                component: FavouritePage,
             }
         ]
     },
     {
-        path: "/favourite",
+        path: "/live",
         component: Layout,
-        name: "Favourite",
         children: [
             {
                 path: "",
-                component: () => import("@/pages/favourite"),
-                name: "FavouriteManage",
+                component: () => import("@/pages/LivePage")
             }
         ]
     }
@@ -34,6 +35,15 @@ const routes = [
 const router = new VueRouter({
     mode: "history",
     routes: routes,
+})
+
+router.beforeEach((_to, _from, next) => {
+    NProgress.start()
+    next()
+})
+
+router.afterEach(() => {
+    NProgress.done()
 })
 
 export default router
