@@ -16,14 +16,14 @@ const routes = [
         }]
     },
     {
-        path: "/fav",
+        path: "/favourite",
         component: Layout,
-        redirect: "/fav/manage",
-        name: "Fav",
+        redirect: "/favourite/manage",
+        name: "Favourite",
         children: [
             {
                 path: "manage",
-                component: () => import("@/views/fav/index"),
+                component: () => import("@/views/Favourite/index"),
                 name: "FavManage",
             }
         ]
@@ -32,7 +32,7 @@ const routes = [
 
 const router = new VueRouter({
     mode: "history",
-    routes
+    routes: routes,
 })
 
 export default router

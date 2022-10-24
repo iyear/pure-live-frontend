@@ -38,15 +38,8 @@
                   :value="list.id">
               </el-option>
             </el-select>
-            <el-button @click="addFav" type="primary" round>确定</el-button>
+            <el-button @click="addFavourite" type="primary" round>确定</el-button>
           </el-dialog>
-        </el-col>
-        <el-col :span="6">
-          <el-alert
-              :title="getHot"
-              type="error"
-              :closable="false">
-          </el-alert>
         </el-col>
       </el-row>
     </el-container>
@@ -62,11 +55,6 @@ import util from "./util"
 
 export default {
   name: "Player",
-  computed: {
-    getHot() {
-      return "热度: " + util.transformNum(this.hot)
-    }
-  },
   watch: {
     room: function (val) {
       this.room = val
@@ -104,7 +92,7 @@ export default {
         this.player.pause();
       }
     },
-    addFav() {
+    addFavourite() {
       this.$axios.post(`${this.$store.getters["player/getHTTP"]}/fav/add`, {
         fid: this.favSelected,
         order: 1,

@@ -3,7 +3,7 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-const Fav = {
+const Favourite = {
     namespaced: true,
     state: () => ({}),
     mutations: {},
@@ -14,7 +14,7 @@ const Fav = {
 const Player = {
     namespaced: true,
     state: () => ({
-        baseApi: `${window.location.host}/api/v1`,
+        baseApi: `192.168.31.63:9998/api/v1`,
         uuid: '',
         plat: '',
         room: '',
@@ -57,11 +57,10 @@ const Player = {
 export default new Vuex.Store({
     state: () => ({
         plats: [
-            {id: "bilibili", name: "哔哩哔哩"},
-            {id: "huya", name: "虎牙"},
-            {id: "douyu", name: "斗鱼"},
-            {id: "egame", name: "企鹅电竞"},
-            {id: "inke", name: "映客"}
+            { id: "bilibili", name: "哔哩哔哩" },
+            { id: "huya", name: "虎牙" },
+            { id: "douyu", name: "斗鱼" },
+            { id: "inke", name: "映客" }
         ]
     }),
     mutations: {},
@@ -73,6 +72,6 @@ export default new Vuex.Store({
     },
     modules: {
         player: Player,
-        fav: Fav
+        fav: Favourite
     }
 })
