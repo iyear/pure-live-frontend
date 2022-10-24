@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@types/dplayer': ^1.25.2
   '@vue/cli-plugin-babel': ~4.5.0
   '@vue/cli-plugin-eslint': ~4.5.0
   '@vue/cli-plugin-router': ~4.5.0
@@ -37,6 +38,7 @@ dependencies:
   vuex: 3.6.2_vue@2.7.13
 
 devDependencies:
+  '@types/dplayer': 1.25.2
   '@vue/cli-plugin-babel': 4.5.19_b3cd62ule6bn6nli7qbj7fitry
   '@vue/cli-plugin-eslint': 4.5.19_fepo2kslcuyry2fkxxpiwlhxb4
   '@vue/cli-plugin-router': 4.5.19_@vue+cli-service@4.5.19
@@ -1389,6 +1391,10 @@ packages:
     resolution: {integrity: sha512-cdeYyv4KWoEgpBISTxWvqYsVy444DOqehiF3fM3ne10AmJ62RSyNkUnxMJXHQWRQQX2eR94m5y1IZyDwBjV9FQ==}
     dependencies:
       '@types/node': 18.11.4
+    dev: true
+
+  /@types/dplayer/1.25.2:
+    resolution: {integrity: sha512-bkTVZkK3Vi7N7eX2FUBnqKhCjTaeRLkhvY8H6zolatbSTtjPPdxyUzhE3C29sIBYRRq1kQHSduFgCHKg5VF3Jw==}
     dev: true
 
   /@types/express-serve-static-core/4.17.31:

@@ -9,11 +9,13 @@ const routes = [
         path: "/",
         component: Layout,
         redirect: "/live",
-        children: [{
-            path: "live",
-            name: "Live",
-            component: () => import("@/views/live/index")
-        }]
+        children: [
+            {
+                path: "live",
+                name: "Live",
+                component: () => import("@/pages/live")
+            }
+        ]
     },
     {
         path: "/favourite",
@@ -23,7 +25,7 @@ const routes = [
         children: [
             {
                 path: "manage",
-                component: () => import("@/views/Favourite/index"),
+                component: () => import("@/pages/favourite"),
                 name: "FavManage",
             }
         ]
