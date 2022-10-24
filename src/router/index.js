@@ -20,13 +20,12 @@ const routes = [
     {
         path: "/favourite",
         component: Layout,
-        redirect: "/favourite/manage",
         name: "Favourite",
         children: [
             {
-                path: "manage",
+                path: "",
                 component: () => import("@/pages/favourite"),
-                name: "FavManage",
+                name: "FavouriteManage",
             }
         ]
     }

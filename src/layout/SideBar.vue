@@ -16,7 +16,7 @@ export default {
     return {
       items: [
         {icon: "el-icon-position", title: "直播间", path: "/live"},
-        {icon: "el-icon-star-off", title: "收藏夹", path: "/favourite/manage"}
+        {icon: "el-icon-star-off", title: "收藏夹", path: "/favourite"}
       ]
     }
   },

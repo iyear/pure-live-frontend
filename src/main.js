@@ -1,8 +1,10 @@
+// import third-party modules
 import Vue from 'vue'
+import axios from "axios";
+// import local modules
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import axios from "axios";
 import './plugins/element.js'
 
 Vue.config.productionTip = false
