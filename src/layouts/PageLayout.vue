@@ -1,10 +1,10 @@
 <template>
   <el-container>
-    <el-header height="35px" style="margin-top: 10px">
+    <el-header height="35px">
       <NavBar />
     </el-header>
     <el-container>
-      <el-aside width="150px" style="margin-top: 10px">
+      <el-aside width="200px">
         <SideBar />
       </el-aside>
       <el-main>
@@ -16,7 +16,6 @@
       </el-main>
     </el-container>
   </el-container>
-
 </template>
 
 <script>
@@ -31,3 +30,9 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.el-aside {
+  height: calc(100vh-35px);
+}
+</style>

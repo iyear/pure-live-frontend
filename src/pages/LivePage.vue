@@ -1,28 +1,38 @@
 <template>
   <div>
-    <div class="el-page-header__content title">
-      {{ this.$store.state.player.title }}
-    </div>
-    <div class="el-page-header__content upper">
-      {{ this.$store.state.player.upper }}
-    </div>
-    <Player />
+    <el-page-header @back="goBack" content="直播" />
+    <el-card shadow="never">
+      <LiveTitle />
+      <LivePlayer />
+    </el-card>
   </div>
 </template>
   
 <script>
-import Player from "@/components/live/Player";
+import LivePlayer from "@/components/Live/Player";
+import LiveTitle from "@/components/Live/Title";
 
 export default {
   name: "LivePage",
   components: {
-    Player
+    LivePlayer,
+    LiveTitle
+  },
+  methods: {
+    goBack() {
+      this.$router.back();
+    }
   }
 }
-
 </script>
   
 <style scoped>
+.el-page-header {
+  margin: 16px;
+}
 
+.el-card {
+  border-radius: 1rem;
+}
 </style>
   

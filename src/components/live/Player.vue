@@ -19,7 +19,6 @@
           <el-dropdown trigger="hover" :show-timeout="100" placement="bottom" @command="menuHandle">
             <i class="el-icon-more" style="margin-top: 12px"></i>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item command="goto" icon="el-icon-top-right">前往直播间</el-dropdown-item>
               <el-dropdown-item command="get" icon="el-icon-link">复制直播流地址</el-dropdown-item>
               <el-dropdown-item command="fav" icon="el-icon-star-on">收藏</el-dropdown-item>
             </el-dropdown-menu>
@@ -67,17 +66,12 @@ export default {
         container: document.getElementById('player'),
         live: true,
         hotkey: true,
-        screenshot: true,
         danmaku: true,
-        video: {
-          // url:"https://usher.ttvnw.net/api/channel/hls/tsm_imperialhal.m3u8?allow_source=true&dt=2&fast_bread=true&player_backend=mediaplayer&playlist_include_framerate=true&reassignments_supported=true&sig=d0385e3ce933c8fe76ff6a9a4d9ce01e29b04f6b&supported_codecs=vp09%2Cavc1&token=%7B%22adblock%22%3Afalse%2C%22authorization%22%3A%7B%22forbidden%22%3Afalse%2C%22reason%22%3A%22%22%7D%2C%22blackout_enabled%22%3Afalse%2C%22channel%22%3A%22tsm_imperialhal%22%2C%22channel_id%22%3A146922206%2C%22chansub%22%3A%7B%22restricted_bitrates%22%3A%5B%5D%2C%22view_until%22%3A1924905600%7D%2C%22ci_gb%22%3Afalse%2C%22geoblock_reason%22%3A%22%22%2C%22device_id%22%3Anull%2C%22expires%22%3A1638161547%2C%22extended_history_allowed%22%3Afalse%2C%22game%22%3A%22%22%2C%22hide_ads%22%3Afalse%2C%22https_required%22%3Atrue%2C%22mature%22%3Afalse%2C%22partner%22%3Afalse%2C%22platform%22%3A%22web%22%2C%22player_type%22%3A%22site%22%2C%22private%22%3A%7B%22allowed_to_view%22%3Atrue%7D%2C%22privileged%22%3Afalse%2C%22role%22%3A%22%22%2C%22server_ads%22%3Atrue%2C%22show_ads%22%3Atrue%2C%22subscriber%22%3Afalse%2C%22turbo%22%3Afalse%2C%22user_id%22%3Anull%2C%22user_ip%22%3A%22203.175.12.116%22%2C%22version%22%3A2%7D&cdm=wv&player_version=1.4.0",
-          // type:"hls"
-        },
+        video: {},
         apiBackend: {
           read: function (option) {
             option.success();
           },
-          send: this.sendDanmaku
         },
       }
       this.player = new DPlayer(options);
@@ -88,29 +82,24 @@ export default {
         this.player.pause();
       }
     },
-    addFavourite() {
-      this.$axios.post(`${this.$store.getters["player/getHTTP"]}/fav/add`, {
+    async addFavourite() {
+      let resp = await this.$axios.post(`${this.$store.getters["player/getHTTP"]}/fav/add`, {
         fid: this.favSelected,
         order: 1,
         plat: this.$store.state.player.plat,
         room: this.$store.state.player.room,
         upper: this.$store.state.player.upper
-      }).then(resp => {
-        const d = resp.data
-        if (d.code !== 0) {
-          this.$message.error(`添加收藏失败: ${d.msg}`)
-          return
-        }
-        this.$message.success(`添加成功! ID: ${d.data.id}`)
-        this.displayFav = false
       })
+      const data = resp.data
+      if (data.code !== 0) {
+        this.$message.error(`添加收藏失败: ${data.msg}`)
+      } else {
+        this.$message.success(`添加成功! ID: ${data.data.id}`)
+        this.displayFav = false
+      }
     },
     menuHandle(cmd) {
       switch (cmd) {
-        case "goto": {
-          window.open(this.roomLink, '_blank')
-          break
-        }
         case "get": {
           this.displayOrigin = true
           break
@@ -165,8 +154,6 @@ export default {
 
       this.$store.commit('player/setTitle', { title: d.data.title });
       this.$store.commit('player/setUpper', { upper: d.data.upper });
-      document.title = `pure-live - ${d.data.title}`
-
       this.room = d.data.room
       this.roomLink = d.data.link
       console.log(this.roomLink);
@@ -240,24 +227,6 @@ export default {
         }
       }
     },
-    sendDanmaku(options) {
-      const data = options.data
-      this.$axios.post(`${this.$store.getters["player/getHTTP"]}/live/danmaku/send`, {
-        id: this.$store.state.player.uuid,
-        content: data.text,
-        type: data.type,// 1:顶部 0:滚动 2:底部
-        color: data.color,
-      }).then(resp => {
-        console.log(resp);
-        const d = resp.data;
-        if (d.code !== 0) {
-          this.$message.error(`发送失败!错误: ${d.msg}`);
-          return;
-        }
-        this.$message.success('发送成功!')
-      })
-
-    }
   },
   mounted() {
     window.flvjs = flvJS

@@ -1,52 +1,52 @@
 <template>
   <div>
-    <el-tabs tab-position="left" @tab-click="favSelectedChange">
-      <el-tab-pane v-for="item in favLists" :key="item.id" :label="item.title">
-        <el-table :data="favs" style="width: 100%" max-height="500">
-          <el-table-column label="播放" width="70">
-            <template slot-scope="scope">
-              <el-button icon="el-icon-video-play" :type="favInfo[scope.row.id].status === 1 ? 'primary' : ''"
-                size="small" @click="play(scope.row)" circle>
-              </el-button>
-            </template>
-          </el-table-column>
-          <el-table-column label="ID" width="70">
-            <template slot-scope="scope">
-              <el-tag effect="dark" type="info">{{ scope.row.id }}</el-tag>
-            </template>
-          </el-table-column>
-          <el-table-column label="平台" width="100">
-            <template slot-scope="scope">
-              <el-tag effect="dark" type="info">{{ $store.getters.getPlat(scope.row.plat).name }}</el-tag>
-            </template>
-          </el-table-column>
-          <el-table-column label="房间" width="100">
-            <template slot-scope="scope">
-              <el-tag effect="dark">{{ scope.row.room }}</el-tag>
-            </template>
-          </el-table-column>
-          <el-table-column label="主播" width="200">
-            <template slot-scope="scope">
-              <el-tag effect="dark">{{ scope.row.upper }}</el-tag>
-            </template>
-          </el-table-column>
-          <el-table-column label="排序" width="70">
-            <template slot-scope="scope">
-              <el-tag effect="dark" type="info">{{ scope.row.order }}</el-tag>
-            </template>
-          </el-table-column>
-          <el-table-column label="操作">
-            <template slot-scope="scope">
-              <el-button size="mini" @click="startEditFav(scope.row)" style="margin-right: 10px">编辑</el-button>
-              <el-popconfirm icon="el-icon-info" icon-color="red" :title="'确定要删除' + scope.row.upper + '的直播间吗?'"
-                @confirm="favDel(scope.row)">
-                <el-button size="mini" type="danger" slot="reference">删除</el-button>
-              </el-popconfirm>
-            </template>
-          </el-table-column>
-        </el-table>
-      </el-tab-pane>
-    </el-tabs>
+    <el-page-header @back="goBack" content="收藏夹" />
+    <el-card shadow="never">
+      <el-table :data="favs" style="width: 100%">
+        <el-table-column label="播放" width="70">
+          <template slot-scope="scope">
+            <el-button icon="el-icon-video-play" :type="favInfo[scope.row.id].status === 1 ? 'primary' : ''"
+              size="small" @click="play(scope.row)" circle>
+            </el-button>
+          </template>
+        </el-table-column>
+        <el-table-column label="ID" width="70">
+          <template slot-scope="scope">
+            <el-tag effect="dark" type="info">{{ scope.row.id }}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="平台" width="100">
+          <template slot-scope="scope">
+            <el-tag effect="dark" type="info">{{ $store.getters.getPlat(scope.row.plat).name }}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="房间" width="100">
+          <template slot-scope="scope">
+            <el-tag effect="dark">{{ scope.row.room }}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="主播" width="200">
+          <template slot-scope="scope">
+            <el-tag effect="dark">{{ scope.row.upper }}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="排序" width="70">
+          <template slot-scope="scope">
+            <el-tag effect="dark" type="info">{{ scope.row.order }}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button size="mini" @click="startEditFav(scope.row)" style="margin-right: 10px">编辑</el-button>
+            <el-popconfirm icon="el-icon-info" icon-color="red" :title="'确定要删除' + scope.row.upper + '的直播间吗?'"
+              @confirm="favDel(scope.row)">
+              <el-button size="mini" type="danger" slot="reference">删除</el-button>
+            </el-popconfirm>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-card>
+
     <el-button type="primary" size="small" round style="margin-top: 10px" @click="addFavListDisPlay = true">
       新增
     </el-button>
@@ -135,6 +135,9 @@ import moment from "moment";
 export default {
   name: "FavouritePage",
   methods: {
+    goBack() {
+      this.$router.back();
+    },
     transformTime(unix) {
       return moment.unix(unix).format("YYYY-MM-DD HH:mm")
     },
@@ -292,5 +295,7 @@ export default {
 </script>
 
 <style scoped>
-
+.el-page-header {
+  margin: 16px;
+}
 </style>
